@@ -46,7 +46,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh """
                         sudo echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        sudo docker push ${FRONTEND_IMAGE}:latest
+                        
                         sudo docker push ${BACKEND_IMAGE}:latest
                     """
                 }
