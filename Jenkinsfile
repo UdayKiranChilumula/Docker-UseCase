@@ -30,6 +30,7 @@ pipeline {
                 dir('frontend') {
                     sh """
                         docker build -t ${FRONTEND_IMAGE}:${BUILD_NUMBER} .
+                        docker tag ${FRONTEND_IMAGE}:${BUILD_NUMBER} udaykiranchilumula/${FRONTEND_IMAGE}:${BUILD_NUMBER}
                     """
                 }
             }
@@ -40,6 +41,7 @@ pipeline {
                 dir('backend') {
                     sh """
                         docker build -t ${BACKEND_IMAGE}:${BUILD_NUMBER} .
+                        docker tag ${BACKEND_IMAGE}:${BUILD_NUMBER} udaykiranchilumula/${BACKEND_IMAGE}:${BUILD_NUMBER}
                     """
                 }
             }
