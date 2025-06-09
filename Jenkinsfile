@@ -28,7 +28,7 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 dir('frontend') {
-                    sh "sudo docker build -t ${FRONTEND_IMAGE} ."
+                    sh "docker build -t ${FRONTEND_IMAGE} ."
                 }
             }
         }
@@ -36,7 +36,7 @@ pipeline {
         stage('Build Backend') {
             steps {
                 dir('backend') {
-                    sh "sudo docker build -t ${BACKEND_IMAGE} ."
+                    sh "docker build -t ${BACKEND_IMAGE} ."
                 }
             }
         }
@@ -45,9 +45,9 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh """
-                        sudo docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-                        sudo docker push ${FRONTEND_IMAGE}
-                        sudo docker push ${BACKEND_IMAGE}
+                        docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
+                        docker push ${FRONTEND_IMAGE}
+                        docker push ${BACKEND_IMAGE}
                     """
                 }
             }
