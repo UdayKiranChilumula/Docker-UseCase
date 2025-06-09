@@ -52,8 +52,8 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh """
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker push udaykiranchilumula/${FRONTEND_IMAGE}:${BUILD_NUMBER}
-                        docker push udaykiranchilumula/${BACKEND_IMAGE}:${BUILD_NUMBER}
+                        docker push udaykiranchilumula/${FRONTEND_IMAGE}
+                        docker push udaykiranchilumula/${BACKEND_IMAGE}
                     """
                 }
             }
