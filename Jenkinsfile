@@ -47,12 +47,12 @@ pipeline {
     post {
         always {
             echo '🧹 Cleaning up frontend/ and backend/ directories...'
-            dir('frontend') {
-                deleteDir()
-            }
-            dir('backend') {
-                deleteDir()
-            }
+            // dir('frontend') {
+            //     deleteDir()
+            // }
+            // dir('backend') {
+            //     deleteDir()
+            // }
         }
     }
 }
