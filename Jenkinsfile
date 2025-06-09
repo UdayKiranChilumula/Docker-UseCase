@@ -5,8 +5,8 @@ pipeline {
         FRONTEND_REPO = 'https://github.com/UdayKiranChilumula/Frontend.git'
         BACKEND_REPO  = 'https://github.com/UdayKiranChilumula/Backend.git'
 
-        FRONTEND_IMAGE = 'udaykiranchilumula/estate-frontend'
-        BACKEND_IMAGE  = 'udaykiranchilumula/estate-backend'
+        FRONTEND_IMAGE = 'estate-frontend'
+        BACKEND_IMAGE  = 'estate-backend'
 
         DEPLOY_USER = 'ec2-user'
         DEPLOY_HOST = '<EC2-B-PUBLIC-IP>'
