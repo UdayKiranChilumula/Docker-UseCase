@@ -9,7 +9,7 @@ pipeline {
         BACKEND_IMAGE  = 'estate-backend'
 
         DEPLOY_USER = 'ec2-user'
-        DEPLOY_HOST = '<EC2-B-PUBLIC-IP>'
+        DEPLOY_HOST = '35.171.26.232'
         DEPLOY_PATH = '/home/ec2-user/estate-deployment'
     }
 
@@ -58,6 +58,27 @@ pipeline {
                 }
             }
         }
+        stage('Deploy to EC2 via SCP and SSH') {
+            steps {
+                withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'SSH_KEY')]) {
+                    sh """
+                        echo "📦 Copying docker-compose.yml to EC2"
+                        scp -o StrictHostKeyChecking=no -i "$SSH_KEY" "./docker_compose.yml" ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/docker_compose.yml
+
+                        echo "🚀 Deploying on remote EC2"
+                        ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" ${DEPLOY_USER}@${DEPLOY_HOST} '
+                            mkdir -p ${DEPLOY_PATH}
+                            cd ${DEPLOY_PATH}
+                            docker-compose pull
+                            docker-compose up -d
+                            echo "🔍 Running Containers:"
+                            docker ps
+                        '
+                    """
+                }
+            }
+        }
+
     }
 
     post {
