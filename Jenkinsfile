@@ -28,7 +28,10 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 dir('frontend') {
-                    sh "docker build -t ${FRONTEND_IMAGE} ."
+                    sh """
+                        docker build -t ${FRONTEND_IMAGE} .
+                        docker tag estate-frontend udaykiranchilumula/estate-frontend
+                    """
                 }
             }
         }
@@ -36,7 +39,10 @@ pipeline {
         stage('Build Backend') {
             steps {
                 dir('backend') {
-                    sh "docker build -t ${BACKEND_IMAGE} ."
+                    sh """
+                        docker build -t ${BACKEND_IMAGE} .
+                        docker tag estate-backend udaykiranchilumula/estate-backend
+                    """
                 }
             }
         }
@@ -46,8 +52,8 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh """
                         docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-                        docker push ${FRONTEND_IMAGE}
-                        docker push ${BACKEND_IMAGE}
+                        docker push udaykiranchilumula/${FRONTEND_IMAGE}
+                        docker push udaykiranchilumula/${BACKEND_IMAGE}
                     """
                 }
             }
