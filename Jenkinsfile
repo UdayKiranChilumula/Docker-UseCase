@@ -30,7 +30,7 @@ pipeline {
                 dir('frontend') {
                     sh """
                         docker build -t ${FRONTEND_IMAGE} .
-                        docker tag estate-frontend udaykiranchilumula/estate-frontend
+                        docker tag ${FRONTEND_IMAGE} udaykiranchilumula/${FRONTEND_IMAGE}
                     """
                 }
             }
@@ -41,7 +41,7 @@ pipeline {
                 dir('backend') {
                     sh """
                         docker build -t ${BACKEND_IMAGE} .
-                        docker tag estate-backend udaykiranchilumula/estate-backend
+                        docker tag ${BACKEND_IMAGE} udaykiranchilumula/${BACKEND_IMAGE}
                     """
                 }
             }
