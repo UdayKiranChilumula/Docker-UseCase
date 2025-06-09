@@ -30,7 +30,7 @@ pipeline {
                 dir('frontend') {
                     sh """
                         docker build -t ${FRONTEND_IMAGE} .
-                        docker tag ${FRONTEND_IMAGE} udaykiranchilumula/${FRONTEND_IMAGE}
+                        docker tag ${FRONTEND_IMAGE} udaykiranchilumula/${FRONTEND_IMAGE}:${BUILD_NUMBER}
                     """
                 }
             }
@@ -41,7 +41,7 @@ pipeline {
                 dir('backend') {
                     sh """
                         docker build -t ${BACKEND_IMAGE} .
-                        docker tag ${BACKEND_IMAGE} udaykiranchilumula/${BACKEND_IMAGE}
+                        docker tag ${BACKEND_IMAGE} udaykiranchilumula/${BACKEND_IMAGE}:${BUILD_NUMBER}
                     """
                 }
             }
@@ -51,9 +51,9 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh """
-                        docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-                        docker push udaykiranchilumula/${FRONTEND_IMAGE}
-                        docker push udaykiranchilumula/${BACKEND_IMAGE}
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push udaykiranchilumula/${FRONTEND_IMAGE}:${BUILD_NUMBER}
+                        docker push udaykiranchilumula/${BACKEND_IMAGE}:${BUILD_NUMBER}
                     """
                 }
             }
