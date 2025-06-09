@@ -28,18 +28,16 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 dir('frontend') {
-                    sh "docker build -t ${FRONTEND_IMAGE}:latest ."
+                    sh "sudo docker build -t ${FRONTEND_IMAGE}:latest ."
                 }
-               
             }
         }
 
         stage('Build Backend') {
             steps {
                 dir('backend') {
-                    sh "docker build -t ${BACKEND_IMAGE}:latest ."
+                    sh "sudo docker build -t ${BACKEND_IMAGE}:latest ."
                 }
-                
             }
         }        
     }
@@ -47,12 +45,12 @@ pipeline {
     post {
         always {
             echo '🧹 Cleaning up frontend/ and backend/ directories...'
-            // dir('frontend') {
-            //     deleteDir()
-            // }
-            // dir('backend') {
-            //     deleteDir()
-            // }
+            dir('frontend') {
+                deleteDir()
+            }
+            dir('backend') {
+                deleteDir()
+            }
         }
     }
 }
