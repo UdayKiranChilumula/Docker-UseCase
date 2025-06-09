@@ -63,7 +63,7 @@ pipeline {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'SSH_KEY')]) {
                     sh """
                         echo "📦 Copying docker-compose.yml to EC2"
-                        scp -o StrictHostKeyChecking=no -i "$SSH_KEY" "./docker_compose.yml" ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/docker_compose.yml
+                        scp -o StrictHostKeyChecking=no -i "$SSH_KEY" "./docker-compose.yml" ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/docker-compose.yml
 
                         echo "🚀 Deploying on remote EC2"
                         ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" ${DEPLOY_USER}@${DEPLOY_HOST} '
