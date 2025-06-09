@@ -29,8 +29,7 @@ pipeline {
             steps {
                 dir('frontend') {
                     sh """
-                        docker build -t ${FRONTEND_IMAGE} .
-                        docker tag ${FRONTEND_IMAGE} udaykiranchilumula/${FRONTEND_IMAGE}:${BUILD_NUMBER}
+                        docker build -t ${FRONTEND_IMAGE}:${BUILD_NUMBER} .
                     """
                 }
             }
@@ -40,8 +39,7 @@ pipeline {
             steps {
                 dir('backend') {
                     sh """
-                        docker build -t ${BACKEND_IMAGE} .
-                        docker tag ${BACKEND_IMAGE} udaykiranchilumula/${BACKEND_IMAGE}:${BUILD_NUMBER}
+                        docker build -t ${BACKEND_IMAGE}:${BUILD_NUMBER} .
                     """
                 }
             }
