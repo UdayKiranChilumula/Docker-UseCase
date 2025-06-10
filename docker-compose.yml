@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  backend:
+    image: udaykiranchilumula/estate-backend:latest
+    container_name: estate-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - MONGO=${MONGO}
+      - JWT_SECRET=${JWT_SECRET}
+    restart: always
+
+  frontend:
+    image: udaykiranchilumula/estate-frontend:latest
+    container_name: estate-frontend
+    ports:
+      - "4000:80"
+    environment:
+      - API_HOST=${API_HOST}
+    restart: always
+    depends_on:
+      - backend
