@@ -66,7 +66,6 @@ pipeline {
 
                 ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" ${DEPLOY_USER}@${DEPLOY_HOST} '
                     set -e
-                    sudo yum install -y git
                     mkdir -p ${DEPLOY_PATH}
                     cd ${DEPLOY_PATH}
 
