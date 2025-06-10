@@ -6,10 +6,8 @@ services:
     container_name: estate-backend
     ports:
       - "3000:3000"
-    environment:
-      - NODE_ENV=${NODE_ENV}
-      - MONGO=${MONGO}
-      - JWT_SECRET=${JWT_SECRET}
+    env_file:
+      - /home/ec2-user/envfolder/.env
     restart: always
 
   frontend:
@@ -17,8 +15,8 @@ services:
     container_name: estate-frontend
     ports:
       - "4000:80"
-    environment:
-      - API_HOST=${API_HOST}
+    env_file:
+      - /home/ec2-user/envfolder/.env
     restart: always
     depends_on:
       - backend
