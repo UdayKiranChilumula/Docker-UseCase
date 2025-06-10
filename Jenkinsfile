@@ -72,8 +72,8 @@ pipeline {
             steps {
                 dir('frontend') {
                     sh """
-                        docker build -t ${FRONTEND_IMAGE}:${BUILD_NUMBER} .
-                        docker tag ${FRONTEND_IMAGE}:${BUILD_NUMBER} udaykiranchilumula/${FRONTEND_IMAGE}:${BUILD_NUMBER}
+                        docker build -t ${FRONTEND_IMAGE}:latest .
+                        docker tag ${FRONTEND_IMAGE}:latest udaykiranchilumula/${FRONTEND_IMAGE}:latest
                     """
                 }
             }
@@ -86,8 +86,8 @@ pipeline {
             steps {
                 dir('backend') {
                     sh """
-                        docker build -t ${BACKEND_IMAGE}:${BUILD_NUMBER} .
-                        docker tag ${BACKEND_IMAGE}:${BUILD_NUMBER} udaykiranchilumula/${BACKEND_IMAGE}:${BUILD_NUMBER}
+                        docker build -t ${BACKEND_IMAGE}:latest .
+                        docker tag ${BACKEND_IMAGE}:latst udaykiranchilumula/${BACKEND_IMAGE}:latest
                     """
                 }
             }
@@ -105,10 +105,10 @@ pipeline {
                     sh """
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                         if [ "${FRONTEND_CHANGED}" = "true" ]; then
-                            docker push udaykiranchilumula/${FRONTEND_IMAGE}:${BUILD_NUMBER}
+                            docker push udaykiranchilumula/${FRONTEND_IMAGE}:latest
                         fi
                         if [ "${BACKEND_CHANGED}" = "true" ]; then
-                            docker push udaykiranchilumula/${BACKEND_IMAGE}:${BUILD_NUMBER}
+                            docker push udaykiranchilumula/${BACKEND_IMAGE}:latest
                         fi
                     """
                 }
@@ -140,10 +140,10 @@ pipeline {
                             fi
 
                             echo "📦 Pulling latest Docker images..."
-                            TAG=${BUILD_NUMBER} docker-compose pull
+                            TAG=latest docker-compose pull
 
                             echo "🔧 Starting containers..."
-                            TAG=${BUILD_NUMBER} docker-compose up -d
+                            TAG=latest docker-compose up -d
 
                             echo "✅ Containers running:"
                             docker ps
