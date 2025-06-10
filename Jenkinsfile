@@ -71,7 +71,7 @@ pipeline {
 
                     echo "📥 Cloning/Updating docker-compose repo..."
                     if [ ! -d ".git" ]; then
-                        git clone https://github.com/UdayKiranChilumula/DockerComposeRepo.git . 
+                        git clone https://github.com/UdayKiranChilumula/Docker-UseCase.git . 
                     else
                         git pull origin main
                     fi
