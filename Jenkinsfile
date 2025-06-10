@@ -77,10 +77,10 @@ pipeline {
                     fi
 
                     echo "📦 Pulling latest Docker images..."
-                    docker-compose pull
+                    TAG=${BUILD_NUMBER} docker-compose pull
 
                     echo "🔧 Starting containers..."
-                    docker-compose up -d
+                    TAG=${BUILD_NUMBER} docker-compose up -d
 
                     echo "✅ Containers running:"
                     docker ps
