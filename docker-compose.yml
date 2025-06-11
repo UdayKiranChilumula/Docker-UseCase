@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   backend:
-    image: udaykiranchilumula/estate-backend:${TAG}
+    image: udaykiranchilumula/estate-backend
     container_name: estate-backend
     ports:
       - "3000:3000"
@@ -11,7 +11,7 @@ services:
     restart: always
 
   frontend:
-    image: udaykiranchilumula/estate-frontend:${TAG}
+    image: udaykiranchilumula/estate-frontend
     container_name: estate-frontend
     ports:
       - "4000:80"
