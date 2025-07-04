@@ -8,11 +8,14 @@ pipeline {
         FRONTEND_IMAGE = 'estate-frontend'
         BACKEND_IMAGE  = 'estate-backend'
 
+        AWS_ACCOUNT_ID = '440744254638'
+        REGION = 'us-east-1'
+        ECR_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
+
         DEPLOY_USER = 'ec2-user'
-        DEPLOY_HOST = '35.171.26.232'
+        DEPLOY_HOST = '13.218.63.126'
         DEPLOY_PATH = '/home/ec2-user/estate-deployment'
 
-        // Generic Webhook passes repo name as 'REPO_NAME'
         REPO_NAME = "${env.REPO_NAME}"
     }
 
@@ -38,36 +41,36 @@ pipeline {
                 script {
                     if (REPO_NAME == 'Frontend') {
                         dir('frontend') {
-                            sh """
-                                docker build -t ${FRONTEND_IMAGE} .
-                                docker tag ${FRONTEND_IMAGE} udaykiranchilumula/${FRONTEND_IMAGE}
-                            """
+                            sh "docker build -t ${FRONTEND_IMAGE} ."
                         }
                     } else if (REPO_NAME == 'Backend') {
                         dir('backend') {
-                            sh """
-                                docker build -t ${BACKEND_IMAGE} .
-                                docker tag ${BACKEND_IMAGE} udaykiranchilumula/${BACKEND_IMAGE}
-                            """
+                            sh "docker build -t ${BACKEND_IMAGE} ."
                         }
                     }
                 }
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Push Docker Image to ECR') {
             steps {
                 script {
-                    if (REPO_NAME == 'Frontend' || REPO_NAME == 'Backend') {
-                        withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
+                        sh """
+                            aws ecr get-login-password --region ${REGION} | \
+                            docker login --username AWS --password-stdin ${ECR_URI}
+                        """
+
+                        if (REPO_NAME == 'Frontend') {
                             sh """
-                                echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                                docker tag ${FRONTEND_IMAGE} ${ECR_URI}/${FRONTEND_IMAGE}
+                                docker push ${ECR_URI}/${FRONTEND_IMAGE}
                             """
-                            if (REPO_NAME == 'Frontend') {
-                                sh "docker push udaykiranchilumula/${FRONTEND_IMAGE}"
-                            } else if (REPO_NAME == 'Backend') {
-                                sh "docker push udaykiranchilumula/${BACKEND_IMAGE}"
-                            }
+                        } else if (REPO_NAME == 'Backend') {
+                            sh """
+                                docker tag ${BACKEND_IMAGE} ${ECR_URI}/${BACKEND_IMAGE}
+                                docker push ${ECR_URI}/${BACKEND_IMAGE}
+                            """
                         }
                     }
                 }
@@ -92,11 +95,15 @@ pipeline {
                             git pull origin main
                         fi
 
+                        echo "🔐 Logging into Amazon ECR using EC2 IAM Role"
+                        aws ecr get-login-password --region ${REGION} | \
+                        docker login --username AWS --password-stdin ${ECR_URI}
+
                         echo "📦 Pulling latest Docker images..."
                         docker-compose pull
 
-                        echo "🔧 Starting containers..."
-                        docker-compose up -d
+                        echo "🚀 Starting containers..."
+                        docker-compose up -d --pull always
 
                         echo "✅ Containers running:"
                         docker ps
