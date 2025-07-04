@@ -41,11 +41,11 @@ pipeline {
                 script {
                     if (REPO_NAME == 'Frontend') {
                         dir('frontend') {
-                            sh "docker build -t ${FRONTEND_IMAGE}:latest ."
+                            sh "docker build -t ${FRONTEND_IMAGE} ."
                         }
                     } else if (REPO_NAME == 'Backend') {
                         dir('backend') {
-                            sh "docker build -t ${BACKEND_IMAGE}:latest ."
+                            sh "docker build -t ${BACKEND_IMAGE} ."
                         }
                     }
                 }
