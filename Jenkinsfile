@@ -41,11 +41,11 @@ pipeline {
                 script {
                     if (REPO_NAME == 'Frontend') {
                         dir('frontend') {
-                            sh "docker build -t ${FRONTEND_IMAGE} ."
+                            sh "docker build -t ${FRONTEND_IMAGE}:latest ."
                         }
                     } else if (REPO_NAME == 'Backend') {
                         dir('backend') {
-                            sh "docker build -t ${BACKEND_IMAGE} ."
+                            sh "docker build -t ${BACKEND_IMAGE}:latest ."
                         }
                     }
                 }
@@ -63,13 +63,13 @@ pipeline {
 
                         if (REPO_NAME == 'Frontend') {
                             sh """
-                                docker tag ${FRONTEND_IMAGE} ${ECR_URI}/${FRONTEND_IMAGE}
-                                docker push ${ECR_URI}/${FRONTEND_IMAGE}
+                                docker tag ${FRONTEND_IMAGE}:latest ${ECR_URI}/${FRONTEND_IMAGE}:latest
+                                docker push ${ECR_URI}/${FRONTEND_IMAGE}:latest
                             """
                         } else if (REPO_NAME == 'Backend') {
                             sh """
-                                docker tag ${BACKEND_IMAGE} ${ECR_URI}/${BACKEND_IMAGE}
-                                docker push ${ECR_URI}/${BACKEND_IMAGE}
+                                docker tag ${BACKEND_IMAGE}:latest ${ECR_URI}/${BACKEND_IMAGE}:latest
+                                docker push ${ECR_URI}/${BACKEND_IMAGE}:latest
                             """
                         }
                     }
@@ -95,7 +95,7 @@ pipeline {
                             git pull origin main
                         fi
 
-                        echo "🔐 Logging into Amazon ECR using EC2 IAM Role"
+                        echo "🔐 Logging into Amazon ECR using EC2 IAM Role..."
                         aws ecr get-login-password --region ${REGION} | \
                         docker login --username AWS --password-stdin ${ECR_URI}
 
@@ -116,7 +116,7 @@ pipeline {
 
     post {
         always {
-            echo '🧹 Cleaning up...'
+            echo '🧹 Cleaning up workspace...'
             dir('frontend') {
                 deleteDir()
             }
